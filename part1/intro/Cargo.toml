@@ -1,0 +1,6 @@
+[package]
+name = "intro"
+version = "0.1.0"
+authors = ["Fredrik Andersson <f.anderzon@gmail.com>"]
+
+[dependencies]
