@@ -82,19 +82,17 @@ fn get_mut_todo(todos: &mut Vec<Todo>, todo_id: i16) -> Option<&mut Todo> {
 // Our main reducer, clones the incoming state in a Redux-ey manner
 // No combineReducers is implemented here, so it calls the child reducers
 // by function name
-fn reducer(state: State, action: Action) -> State {
+fn reducer(state: &State, action: Action) -> State {
     // Always return a new state
-    let new_state = state.clone();
-
     State {
-        todos: todo_reducer(new_state.todos, &action),
-        visibility_filter: visibility_reducer(new_state.visibility_filter, &action),
+        todos: todo_reducer(&state.todos, &action),
+        visibility_filter: visibility_reducer(&state.visibility_filter, &action),
     }
 }
 
 // Our todo reducer, takes in state (todo list) and returns a new/cloned version
 // after applying the action (is applicable)
-fn todo_reducer(state: Vec<Todo>, action: &Action) -> Vec<Todo> {
+fn todo_reducer(state: &Vec<Todo>, action: &Action) -> Vec<Todo> {
     let mut new_state: Vec<Todo> = state.clone();
 
     // First we make sure it's a `Todos` action, otherwise return clone of incoming state
@@ -118,33 +116,32 @@ fn todo_reducer(state: Vec<Todo>, action: &Action) -> Vec<Todo> {
                 }
             },
         },
-        // Return unchanged state if not a Todos action
-        _ => return new_state,
+        // If it's not a Todos action change nothing
+        _ => (),
     }
     return new_state;
 }
 
 // Very simple reducer since the action will either be a VisibilityFilter, in which
 // case we will return that, otherwise just return the incoming state
-fn visibility_reducer(state: VisibilityFilter, action: &Action) -> VisibilityFilter {
+fn visibility_reducer(state: &VisibilityFilter, action: &Action) -> VisibilityFilter {
     match *action {
         Visibility(ref vis_action) => vis_action.clone(),
         _ => state.clone(),
     }
-
 }
 
 // Redux store implementation
 struct Store {
     state: State,
-    listeners: Vec<fn(State)>,
-    reducer: fn(State, Action) -> State,
+    listeners: Vec<fn(&State)>,
+    reducer: fn(&State, Action) -> State,
 }
 
 impl Store {
     // Takes a reducer function, we skip the initial_state and optional arguments
     // TO keep it simple, State::default() from earlier is our initial_state implementation
-    fn create_store(reducer: fn(State, Action) -> State) -> Store {
+    fn create_store(reducer: fn(&State, Action) -> State) -> Store {
         Store {
             state: State::default(),
             listeners: Vec::new(),
@@ -153,21 +150,22 @@ impl Store {
     }
 
     // Pushes a listener that will be called for any state change
-    fn subscribe(&mut self, listener: fn(State)) {
+    fn subscribe(&mut self, listener: fn(&State)) {
         self.listeners.push(listener);
     }
 
     // Simply returns the state
-    fn get_state(&self) -> State {
-        self.state.clone()
+    #[allow(dead_code)]
+    fn get_state(&self) -> &State {
+        &self.state
     }
 
     // Called for every new action, calls the reducer to update the state
     // and then calls every listener
     fn dispatch(&mut self, action: Action) {
-        self.state = (self.reducer)(self.state.clone(), action);
+        self.state = (self.reducer)(&self.state, action);
         for i in 0..self.listeners.len() {
-            self.listeners[i](self.state.clone());
+            self.listeners[i](&self.state);
         }
     }
 }
@@ -180,7 +178,7 @@ fn print_todo(todo: &Todo) {
 
 // Our print_todos function from last time, a bit altered to take State
 // as input instead of a todos list directly
-fn print_todos(state: State) {
+fn print_todos(state: &State) {
     let visibility = &state.visibility_filter;
     println!("\n\nTodo List:\n-------------------");
     for i in 0..state.todos.len() {
@@ -199,7 +197,7 @@ fn print_todos(state: State) {
 
 
 fn print_instructions() {
-    println!("Available commands:\nadd todo item text here\ntoggle 1 (todo id)\nremove 1 (todo id)\nshow all\nshow active\nshow completed\nlist");
+    println!("\nAvailable commands: \nadd [text] - toggle [id] - remove [id]\nshow [all|active|completed]");
 }
 
 fn invalid_command(command: &str) {
@@ -223,13 +221,6 @@ fn main() {
 
         match command_parts.len() {
             0 => invalid_command(&command),
-            // If the length is 1 it can be a `list` command
-            1 => match command_parts[0] {
-                // For list we don't need to dispatch anything, just print state
-                "list" => print_todos(store.get_state()),
-                _ => invalid_command(&command),
-            },
-            // If the length is bigger than 1 we look for `add x x x x`, `remove x` or `done x`
             _ => {
                 match command_parts[0] {
                     // Since we prepared so well we just need to call dispatch on our store
