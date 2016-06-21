@@ -79,7 +79,7 @@ fn get_mut_todo(todos: &mut Vec<Todo>, todo_id: i16) -> Option<&mut Todo> {
     todos.iter_mut().find(|todo|todo.id == todo_id)
 }
 
-// Our main reducer, clones the incoming state in a Redux-ey manner
+// Our main reducer, returns a new State with the results of the child-reducers
 // No combineReducers is implemented here, so it calls the child reducers
 // by function name
 fn reducer(state: &State, action: Action) -> State {
