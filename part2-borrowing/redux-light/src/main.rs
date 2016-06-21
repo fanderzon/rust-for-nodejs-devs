@@ -164,13 +164,13 @@ impl Store {
     // and then calls every listener
     fn dispatch(&mut self, action: Action) {
         self.state = (self.reducer)(&self.state, action);
-        for i in 0..self.listeners.len() {
-            self.listeners[i](&self.state);
+        for listener in &self.listeners {
+            listener(&self.state)
         }
     }
 }
 
-// Veeery simple function to print a todo
+// Very simple function to print a todo
 fn print_todo(todo: &Todo) {
     let done = if todo.completed { "✔" } else { " " };
     println!("[{}] {} {}", done, todo.id, todo.title);
@@ -181,8 +181,7 @@ fn print_todo(todo: &Todo) {
 fn print_todos(state: &State) {
     let visibility = &state.visibility_filter;
     println!("\n\nTodo List:\n-------------------");
-    for i in 0..state.todos.len() {
-        let todo = &state.todos[i];
+    for todo in &state.todos {
         if !todo.deleted {
             match *visibility {
                 ShowAll => print_todo(&todo),
