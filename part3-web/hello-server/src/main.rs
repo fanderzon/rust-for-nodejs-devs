@@ -1,13 +1,13 @@
-extern crate nickel;
+#[macro_use(middleware)] extern crate nickel;
+use nickel::{Nickel, HttpRouter};
 
-use nickel::{Nickel, HttpRouter, Request, Response, MiddlewareResult};
-
-fn hello_world<'mw>(_req: &mut Request, res: Response<'mw>) -> MiddlewareResult<'mw> {
-    res.send("Hello World!")
-}
+// use nickel::{Nickel, HttpRouter, Request, Response, MiddlewareResult};
+// fn hello_world<'mw>(_req: &mut Request, res: Response<'mw>) -> MiddlewareResult<'mw> {
+//     res.send("Hello World!")
+// }
 
 fn main() {
     let mut app = Nickel::new();
-    app.get("/", hello_world);
+    app.get("/", middleware!("Hello World!"));
     app.listen("0.0.0.0:3000");
 }
