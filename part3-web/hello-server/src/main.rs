@@ -1,4 +1,4 @@
-#[macro_use(middleware)] extern crate nickel;
+#[macro_use] extern crate nickel;
 use nickel::{Nickel, HttpRouter};
 
 // use nickel::{Nickel, HttpRouter, Request, Response, MiddlewareResult};
