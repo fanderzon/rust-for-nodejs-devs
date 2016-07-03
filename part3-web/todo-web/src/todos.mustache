@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="utf-8">
+    <title>Nickel Todo</title>
+    <style type="text/css">
+    html, body, #app {
+      margin: 0;
+      padding: 0;
+      width: 100%;
+      height: 100%;
+      position: relative;
+    }
+    </style>
+  </head>
+  <body>
+    <div id="app">
+      {{name}}'s Todo list!
+      <div id="todos">
+        {{#todos}}
+        <div class="todo">
+          <label>
+            <input type="checkbox" name="todos" value="{{id}}" {{#completed}}checked{{/completed}} />
+            {{title}}
+          </label>
+        </div>
+        {{/todos}}
+      </div>
+    </div>
+  </body>
+</html>

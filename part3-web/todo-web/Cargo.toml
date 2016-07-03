@@ -1,0 +1,10 @@
+[package]
+name = "todo-web"
+version = "0.1.0"
+authors = ["Fredrik Andersson <f.anderzon@gmail.com>"]
+
+[dependencies]
+nickel = "= 0.7.3"
+mustache = "*"
+nickel_mustache = "*"
+rustc-serialize = "*"
