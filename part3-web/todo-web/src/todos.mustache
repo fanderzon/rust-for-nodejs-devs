@@ -11,21 +11,40 @@
       height: 100%;
       position: relative;
     }
+    .todo__options, .todo__options a {
+      font-size: 0.7em;
+      color: #666;
+    }
     </style>
+    <script>
+    document.addEventListener('click', function(e) {
+      console.log(e.target.className);
+      if (e.target && e.target.className === 'toggle') {
+        window.location = '/toggle/' + e.target.value;
+      }
+    });
+    </script>
   </head>
   <body>
-    <div id="app">
-      {{name}}'s Todo list!
+    <form id="app" action="/>
       <div id="todos">
+        <h1>Todo list!</h1>
         {{#todos}}
-        <div class="todo">
-          <label>
-            <input type="checkbox" name="todos" value="{{id}}" {{#completed}}checked{{/completed}} />
-            {{title}}
-          </label>
+        {{^deleted}}
+        <div class="todo{{#completed}} todo--completed{{/completed}}">
+          <input class="toggle" type="checkbox" name="todos" value="{{id}}" {{#completed}}checked{{/completed}} />
+          <span class="todo__title">{{title}}</span>
+          <span class="todo__options">
+            [
+            <a href="/toggle/{{id}}">Toggle done</a>
+            -
+            <a href="/delete/{{id}}">Delete</a>
+            ]
+          </span>
         </div>
+        {{/deleted}}
         {{/todos}}
       </div>
-    </div>
+    </form>
   </body>
 </html>
