@@ -11,40 +11,49 @@
       height: 100%;
       position: relative;
     }
-    .todo__options, .todo__options a {
-      font-size: 0.7em;
-      color: #666;
+    .todos {
+      margin: 10px;
+    }
+    .todo, .visibility-options, .add-todo {
+      padding: 5px;
+    }
+    .todo a {
+      color: #000000;
+      text-decoration: none;
+      font-weight: bold;
+    }
+    .todo.todo--completed a {
+      text-decoration: line-through;
+      color: #999;
+      font-weight: 300;
+    }
+    a.todo__remove {
+      color: #ff0000;
     }
     </style>
-    <script>
-    document.addEventListener('click', function(e) {
-      console.log(e.target.className);
-      if (e.target && e.target.className === 'toggle') {
-        window.location = '/toggle/' + e.target.value;
-      }
-    });
-    </script>
   </head>
   <body>
-    <form id="app" action="/>
-      <div id="todos">
-        <h1>Todo list!</h1>
-        {{#todos}}
-        {{^deleted}}
-        <div class="todo{{#completed}} todo--completed{{/completed}}">
-          <input class="toggle" type="checkbox" name="todos" value="{{id}}" {{#completed}}checked{{/completed}} />
-          <span class="todo__title">{{title}}</span>
-          <span class="todo__options">
-            [
-            <a href="/toggle/{{id}}">Toggle done</a>
-            -
-            <a href="/delete/{{id}}">Delete</a>
-            ]
-          </span>
-        </div>
-        {{/deleted}}
-        {{/todos}}
+    <div class="todos">
+      <h1>Todo list!</h1>
+      {{#todos}}
+      {{^deleted}}
+      <div class="todo{{#completed}} todo--completed{{/completed}}">
+        <a href="/toggle/{{id}}" class="todo__title">{{title}}</a> -
+        <a href="/remove/{{id}}" class="todo__remove">[X]</a>
       </div>
-    </form>
+      {{/deleted}}
+      {{/todos}}
+      <div class="visibility-options">
+        Show:
+        <a href="/show/all">All</a> -
+        <a href="/show/active">Active</a> -
+        <a href="/show/completed">Completed</a>
+      </div>
+      <form class="add-todo" action="/" method="post">
+        <input type="text" name="todo" />
+        <input type="submit" value="Add todo" />
+      </form>
+    </div>
+
   </body>
 </html>

@@ -133,6 +133,7 @@ impl Store {
     }
 
     // Pushes a listener that will be called for any state change
+    #[allow(dead_code)]
     pub fn subscribe(&mut self, listener: fn(&State)) {
         self.listeners.push(listener);
     }
