@@ -35,14 +35,14 @@
   <body>
     <div class="todos">
       <h1>Todo list!</h1>
-      {{#todos}}
-      {{^deleted}}
-      <div class="todo{{#completed}} todo--completed{{/completed}}">
+      {{#each todos}}
+      {{#unless deleted}}
+      <div class="todo{{#if completed}} todo--completed{{/if}}">
         <a href="/toggle/{{id}}" class="todo__title">{{title}}</a> -
         <a href="/remove/{{id}}" class="todo__remove">[X]</a>
       </div>
-      {{/deleted}}
-      {{/todos}}
+      {{/unless}}
+      {{/each}}
       <div class="visibility-options">
         Show:
         <a href="/show/all">All</a> -

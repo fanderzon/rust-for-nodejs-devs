@@ -2,22 +2,30 @@ use store::TodoAction::{ Add, Remove, Toggle };
 use store::Action::{ Todos, Visibility };
 use store::VisibilityFilter:: { ShowActive, ShowAll, ShowCompleted };
 
-#[derive(Clone, Debug, RustcEncodable)]
+use rustc_serialize::json::{self, Json, ToJson};
+
+#[derive(Clone, Debug, RustcEncodable, RustcDecodable)]
 pub struct State {
     pub todos: Vec<Todo>,
-    // pub visibility_filter: VisibilityFilter
+    pub visibility_filter: VisibilityFilter
 }
 impl State {
     // This gives us a quick way to initialize a default state with State::default()
     pub fn default() -> State {
         State {
             todos: Vec::new(),
-            // visibility_filter: VisibilityFilter::ShowAll,
+            visibility_filter: VisibilityFilter::ShowAll,
         }
     }
 }
 
-#[derive(Clone, Debug, RustcEncodable)]
+impl ToJson for State {
+    fn to_json(&self) -> Json {
+        Json::from_str( &json::encode(&self).unwrap() ).unwrap()
+    }
+}
+
+#[derive(Clone, Debug, RustcEncodable, RustcDecodable)]
 pub struct Todo {
     pub id: i16,
     pub title: String,
@@ -50,7 +58,7 @@ pub enum TodoAction {
     Remove(i16),
 }
 
-#[derive(Clone, Debug, RustcEncodable)]
+#[derive(Clone, Debug, RustcEncodable, RustcDecodable)]
 pub enum VisibilityFilter {
     ShowActive,
     ShowAll,
@@ -69,7 +77,7 @@ pub fn reducer(state: &State, action: Action) -> State {
     // Always return a new state
     State {
         todos: todo_reducer(&state.todos, &action),
-        // visibility_filter: visibility_reducer(&state.visibility_filter, &action),
+        visibility_filter: visibility_reducer(&state.visibility_filter, &action),
     }
 }
 

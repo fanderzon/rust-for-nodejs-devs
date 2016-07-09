@@ -1,7 +1,9 @@
 #[macro_use] extern crate nickel;
-extern crate nickel_mustache;
 extern crate rustc_serialize;
+extern crate handlebars;
 mod store;
+mod template;
+use template::render;
 use store::{ Store, Todo, reducer };
 use store::TodoAction::{ Add, Remove, Toggle };
 use store::Action::{ Todos, Visibility };
@@ -9,8 +11,7 @@ use store::VisibilityFilter::{ ShowAll, ShowActive, ShowCompleted };
 
 use std::sync::{Arc, Mutex};
 
-use nickel_mustache::Render;
-use nickel::{Nickel, HttpRouter};
+use nickel::{Nickel, HttpRouter, FormBody};
 
 fn main() {
     let mut server = Nickel::new();
@@ -41,7 +42,7 @@ fn main() {
         // Render from nickel_mustache takes the
         // nickel Result struct, a path to a mustache
         // template, and the data to use
-        return Render::render(res, "src/todos", store.get_state())
+        return render(res, "./src/todos.tpl", store.get_state())
         // And here the lock is released..
     });
 
@@ -80,7 +81,20 @@ fn main() {
             }
         }
         // And render the now updated todo list
-        return Render::render(res, "src/todos", store.get_state())
+        return render(res, "./src/todos.tpl", store.get_state())
+    });
+
+    // Let's clone it again for the next closure
+    let store = store_container.clone();
+
+    server.post("/*", middleware! { |req, res|
+        let mut store = store.lock().unwrap();
+        let form_body = try_with!(res, req.form_body());
+        if let Some(new_todo) = form_body.get("todo") {
+            store.dispatch( Todos( Add(new_todo.to_string()) ) )
+        }
+
+        return render(res, "./src/todos.tpl", store.get_state())
     });
 
     server.listen("0.0.0.0:3000");
