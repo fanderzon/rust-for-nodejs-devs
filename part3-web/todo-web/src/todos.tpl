@@ -34,13 +34,15 @@
   </head>
   <body>
     <div class="todos">
-      <h1>Todo list!</h1>
+      <h1>Todo list! {{visibility_filter}}</h1>
       {{#each todos}}
       {{#unless deleted}}
+      {{#filter_todo}}
       <div class="todo{{#if completed}} todo--completed{{/if}}">
         <a href="/toggle/{{id}}" class="todo__title">{{title}}</a> -
         <a href="/remove/{{id}}" class="todo__remove">[X]</a>
       </div>
+      {{/filter_todo}}
       {{/unless}}
       {{/each}}
       <div class="visibility-options">

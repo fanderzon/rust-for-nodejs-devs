@@ -19,11 +19,6 @@ fn main() {
     // Create our todo list store
     let mut store = Store::create_store(reducer);
 
-    // Add some todo items to it
-    store.dispatch( Todos( Add("one thing".to_string()) ) );
-    store.dispatch( Todos( Add("another thing".to_string()) ) );
-    store.dispatch( Todos( Add("something completely different".to_string()) ) );
-
     // Put the store in a container that will let us
     // safely use it in multi-threaded environment
     let store_container = Arc::new( Mutex::new(store) );
@@ -91,7 +86,9 @@ fn main() {
         let mut store = store.lock().unwrap();
         let form_body = try_with!(res, req.form_body());
         if let Some(new_todo) = form_body.get("todo") {
-            store.dispatch( Todos( Add(new_todo.to_string()) ) )
+            if new_todo.len() > 0 {
+                store.dispatch( Todos( Add(new_todo.to_string()) ) );
+            }
         }
 
         return render(res, "./src/todos.tpl", store.get_state())
