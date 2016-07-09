@@ -1,7 +1,5 @@
 use store::TodoAction::{ Add, Remove, Toggle };
 use store::Action::{ Todos, Visibility };
-use store::VisibilityFilter:: { ShowActive, ShowAll, ShowCompleted };
-
 use rustc_serialize::json::{self, Json, ToJson};
 
 #[derive(Clone, Debug, RustcEncodable, RustcDecodable)]

@@ -4,7 +4,7 @@ extern crate handlebars;
 mod store;
 mod template;
 use template::render;
-use store::{ Store, Todo, reducer };
+use store::{ Store, reducer };
 use store::TodoAction::{ Add, Remove, Toggle };
 use store::Action::{ Todos, Visibility };
 use store::VisibilityFilter::{ ShowAll, ShowActive, ShowCompleted };
@@ -17,7 +17,7 @@ fn main() {
     let mut server = Nickel::new();
 
     // Create our todo list store
-    let mut store = Store::create_store(reducer);
+    let store = Store::create_store(reducer);
 
     // Put the store in a container that will let us
     // safely use it in multi-threaded environment
