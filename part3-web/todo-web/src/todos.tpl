@@ -47,23 +47,21 @@
 
       <footer class="footer">
         <span class="todo-count">
-          <strong>{{todos.length}}</strong>
-          <span> </span>
-          <span>item</span>
-          <span> left</span>
+          <strong>{{#active_count}}{{/active_count}}</strong>
         </span>
         <ul class="filters">
           <li>
-            <a href="/show/all">All</a>
+            <a href="/show/all"{{#is_selected_filter "ShowAll"}} class="selected"{{/is_selected_filter}}>All</a>
           </li>
           <span> </span>
           <li>
-            <a href="/show/active" class="">Active</a>
+            <a href="/show/active"{{#is_selected_filter "ShowActive"}} class="selected"{{/is_selected_filter}}>Active</a>
           </li>
           <span> </span>
           <li>
-            <a href="/show/completed">Completed</a>
+            <a href="/show/completed"{{#is_selected_filter "ShowCompleted"}} class="selected"{{/is_selected_filter}}>Completed</a>
           </li>
+
         </ul>
       </footer>
     </section>
