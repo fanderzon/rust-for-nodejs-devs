@@ -3,59 +3,70 @@
   <head>
     <meta charset="utf-8">
     <title>Nickel Todo</title>
+    <link rel="stylesheet" href="http://todomvc.com/examples/react/node_modules/todomvc-common/base.css">
+    <link rel="stylesheet" href="http://todomvc.com/examples/react/node_modules/todomvc-app-css/index.css">
     <style type="text/css">
-    html, body, #app {
-      margin: 0;
-      padding: 0;
-      width: 100%;
-      height: 100%;
-      position: relative;
-    }
-    .todos {
-      margin: 10px;
-    }
-    .todo, .visibility-options, .add-todo {
-      padding: 5px;
-    }
-    .todo a {
-      color: #000000;
+    label a {
+      color: #4d4d4d;
       text-decoration: none;
-      font-weight: bold;
-    }
-    .todo.todo--completed a {
-      text-decoration: line-through;
-      color: #999;
-      font-weight: 300;
-    }
-    a.todo__remove {
-      color: #ff0000;
     }
     </style>
+    <script>
+      document.addEventListener('click', function clickHandler(e) {
+        if (e.target && e.target.dataset && e.target.dataset.id) {
+          window.location.href = '/' + e.target.dataset.action + '/' + e.target.dataset.id;
+        }
+      });
+    </script>
   </head>
   <body>
-    <div class="todos">
-      <h1>Todo list! {{visibility_filter}}</h1>
-      {{#each todos}}
-      {{#unless deleted}}
-      {{#filter_todo}}
-      <div class="todo{{#if completed}} todo--completed{{/if}}">
-        <a href="/toggle/{{id}}" class="todo__title">{{title}}</a> -
-        <a href="/remove/{{id}}" class="todo__remove">[X]</a>
-      </div>
-      {{/filter_todo}}
-      {{/unless}}
-      {{/each}}
-      <div class="visibility-options">
-        Show:
-        <a href="/show/all">All</a> -
-        <a href="/show/active">Active</a> -
-        <a href="/show/completed">Completed</a>
-      </div>
-      <form class="add-todo" action="/" method="post">
-        <input type="text" name="todo" />
-        <input type="submit" value="Add todo" />
-      </form>
-    </div>
+    <section class="todoapp">
+      <header class="header">
+        <h1>todos</h1>
+        <form class="add-todo" action="/" method="post">
+          <input class="new-todo" placeholder="What needs to be done?" name="todo">
+        </form>
+      </header>
+      <section class="main">
+        <ul class="todo-list">
+          {{#each todos}}
+          {{#unless deleted}}
+          {{#filter_todo}}
+          <li{{#if completed}} class="completed"{{/if}} data-id={{id}}>
+            <div class="view">
+              <input class="toggle" type="checkbox"{{#if completed}} checked="checked"{{/if}} data-id={{id}} data-action="toggle">
+              <label><a href="/toggle/{{id}}">{{title}}</a></label>
+              <button class="destroy" data-id={{id}} data-action="remove"></button>
+            </div>
+          </li>
+          {{/filter_todo}}
+          {{/unless}}
+          {{/each}}
+        </ul>
+      </section>
+
+      <footer class="footer">
+        <span class="todo-count">
+          <strong>{{todos.length}}</strong>
+          <span> </span>
+          <span>item</span>
+          <span> left</span>
+        </span>
+        <ul class="filters">
+          <li>
+            <a href="/show/all">All</a>
+          </li>
+          <span> </span>
+          <li>
+            <a href="/show/active" class="">Active</a>
+          </li>
+          <span> </span>
+          <li>
+            <a href="/show/completed">Completed</a>
+          </li>
+        </ul>
+      </footer>
+    </section>
 
   </body>
 </html>
