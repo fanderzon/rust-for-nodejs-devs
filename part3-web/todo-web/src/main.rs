@@ -3,9 +3,10 @@ extern crate rustc_serialize;
 extern crate handlebars;
 mod store;
 mod template;
+mod todo;
 use template::render;
 use store::{ Store, reducer };
-use store::TodoAction::{ Add, Remove, Toggle };
+use todo::TodoAction::{ Add, Remove, Toggle };
 use store::Action::{ Todos, Visibility };
 use store::VisibilityFilter::{ ShowAll, ShowActive, ShowCompleted };
 

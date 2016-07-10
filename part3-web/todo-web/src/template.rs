@@ -38,6 +38,7 @@ fn is_selected_filter(c: &Context, h: &Helper, ha: &Handlebars, rc: &mut RenderC
     }
 }
 
+#[allow(unused_variables)]
 fn active_count(c: &Context, h: &Helper, ha: &Handlebars, rc: &mut RenderContext) -> Result<(), RenderError> {
     let todos = c.navigate(".", "todos").as_array().unwrap();
     let count = todos
