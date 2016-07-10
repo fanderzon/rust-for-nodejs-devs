@@ -42,7 +42,10 @@ fn active_count(c: &Context, h: &Helper, ha: &Handlebars, rc: &mut RenderContext
     let todos = c.navigate(".", "todos").as_array().unwrap();
     let count = todos
         .into_iter()
-        .filter(|todo| !todo.find("completed").unwrap().as_boolean().unwrap() )
+        .filter(|todo| {
+            !todo.find("completed").unwrap().as_boolean().unwrap() &&
+            !todo.find("deleted").unwrap().as_boolean().unwrap()
+        })
         .count();
 
     let mut output = count.to_string();
