@@ -66,8 +66,8 @@ pub fn render<'mw, T:ToJson + Debug>(res: Response<'mw>, path: &str, data: &T) -
     handlebars.register_helper("filter_todo", Box::new(filter_todo));
     handlebars.register_helper("active_count", Box::new(active_count));
     handlebars.register_helper("is_selected_filter", Box::new(is_selected_filter));
-    handlebars.register_template_file("todos", &Path::new(path)).ok().unwrap();
-    let result = handlebars.render("todos", data).ok().unwrap();
+    handlebars.register_template_file("template", &Path::new(path)).ok().unwrap();
+    let result = handlebars.render("template", data).ok().unwrap();
 
     res.send(result)
 }

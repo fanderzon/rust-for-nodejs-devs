@@ -85,7 +85,7 @@ fn main() {
 
     server.post("/*", middleware! { |req, res|
         let mut store = store.lock().unwrap();
-        let form_body = try_with!(res, req.form_body());
+        let form_body = req.form_body().ok().unwrap();
         if let Some(new_todo) = form_body.get("todo") {
             if new_todo.len() > 0 {
                 store.dispatch( Todos( Add(new_todo.to_string()) ) );
