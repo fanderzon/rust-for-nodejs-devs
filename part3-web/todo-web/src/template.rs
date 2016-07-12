@@ -56,7 +56,7 @@ fn active_count(c: &Context, h: &Helper, ha: &Handlebars, rc: &mut RenderContext
         output.push_str(" items left");
     }
 
-    try!(rc.writer.write(output.as_bytes()));
+    rc.writer.write(output.as_bytes()).unwrap();
     Ok(())
 }
 
