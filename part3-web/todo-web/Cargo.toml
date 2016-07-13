@@ -1,9 +1,9 @@
 [package]
+authors = ["Fredrik Andersson <f.anderzon@gmail.com>"]
 name = "todo-web"
 version = "0.1.0"
-authors = ["Fredrik Andersson <f.anderzon@gmail.com>"]
 
 [dependencies]
-nickel = "*"
-handlebars = "*"
-rustc-serialize = "*"
+handlebars = "0.18.1"
+nickel = "0.8.1"
+rustc-serialize = "0.3.19"
