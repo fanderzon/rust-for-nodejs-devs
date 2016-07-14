@@ -10,8 +10,8 @@ fn filter_todo(c: &Context, h: &Helper, ha: &Handlebars, rc: &mut RenderContext)
     let is_completed = c.navigate( rc.get_path(), "completed").as_boolean().unwrap();
     let show_todo: bool = match active_filter {
         "ShowAll" => true,
-        "ShowCompleted" => if is_completed { true } else { false },
-        "ShowActive" => if is_completed { false } else { true },
+        "ShowCompleted" => is_completed,
+        "ShowActive" => !is_completed,
         _ => false,
     };
 
